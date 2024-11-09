@@ -25,7 +25,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.signupButton.setOnClickListener {
+        binding.btnNavigateSignup.setOnClickListener {
             (activity as? MainActivity)?.switchFragment(SignupFragment())
         }
     }
