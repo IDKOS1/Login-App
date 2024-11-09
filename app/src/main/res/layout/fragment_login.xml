@@ -19,11 +19,11 @@
         app:layout_constraintWidth_percent="0.5" />
 
     <TextView
-        android:id="@+id/tv_login"
+        android:id="@+id/tv_signup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="로그인"
+        android:text="@string/login_tv_login"
         android:textStyle="bold"
         android:textSize="32sp"
         android:textColor="@color/black"
@@ -37,20 +37,20 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="이메일 주소"
+        android:text="@string/login_tv_email"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_login"
+        app:layout_constraintTop_toBottomOf="@id/tv_signup"
         app:layout_constraintWidth_percent="0.9" />
 
     <EditText
         android:id="@+id/et_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="예) example@example.com"
+        android:hint="@string/login_et_email_hint"
         android:textColorHint="@color/gray"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_email"
@@ -60,7 +60,7 @@
         android:id="@+id/tv_email_error"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="이메일을 확인해주세요."
+        android:text="@string/login_tv_email_error"
         android:visibility="gone"
         android:textColor="@color/error"
         app:layout_constraintTop_toBottomOf="@id/et_email"
@@ -73,7 +73,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="비밀번호"
+        android:text="@string/login_tv_password"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +104,7 @@
         android:id="@+id/tv_password_error"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="비밀번호를 확인해주세요."
+        android:text="@string/login_tv_password_error"
         android:visibility="gone"
         android:textColor="@color/error"
         app:layout_constraintTop_toBottomOf="@id/et_password"
@@ -113,13 +113,13 @@
         app:layout_constraintWidth_percent="0.9"/>
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/background_corners_radius_16dp"
         android:backgroundTint="@color/gray"
-        android:text="로그인"
+        android:text="@string/login_btn_login"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -127,17 +127,17 @@
         app:layout_constraintWidth_percent="0.9" />
 
     <Button
-        android:id="@+id/signupButton"
+        android:id="@+id/btn_navigate_signup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="@color/white"
         android:background="@drawable/background_corners_radius_16dp"
         android:backgroundTint="@color/main"
-        android:text="회원가입"
+        android:text="@string/login_btn_navigate_signup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButton"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
         app:layout_constraintWidth_percent="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
