@@ -5,4 +5,5 @@
     <color name="gray">#FFCCCCCC</color>
     <color name="main">#FF6C63FF</color>
     <color name="error">#FF2828</color>
+    <color name="blue">#0D5EFF</color>
 </resources>
