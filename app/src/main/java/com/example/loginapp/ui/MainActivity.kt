@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.loginapp.R
 import com.example.loginapp.databinding.ActivityMainBinding
+import com.example.loginapp.ui.login.LoginFragment
 
 class MainActivity : AppCompatActivity() {
 
