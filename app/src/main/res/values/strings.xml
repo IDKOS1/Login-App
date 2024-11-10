@@ -19,12 +19,13 @@
     <string name="signup_tv_email">이메일 주소</string>
     <string name="signup_tv_email_error">이메일을 확인해주세요.</string>
     <string name="signup_tv_password">비밀번호</string>
-    <string name="signup_tv_password_error">비밀번호를 확인해주세요.</string>
+    <string name="signup_tv_password_error">영문, 숫자, 특수문자 조합으로 8~15자이여야 합니다.</string>
     <string name="signup_tv_password_check">비밀번호 확인</string>
-    <string name="signup_tv_password_check_error">비밀번호를 확인해주세요.</string>
+    <string name="signup_tv_password_check_error">비밀번호가 일치하지 않습니다.</string>
     <string name="signup_tv_nickname">닉네임</string>
     <string name="signup_tv_nickname_error">이미 존재하는 닉네임 입니다.</string>
     <string name="signup_btn_signup">회원가입</string>
     <string name="signup_tv_check_user">이미 회원이신가요?</string>
     <string name="signup_tv_navigate_to_login">로그인 하러 가기</string>
+    <string name="signup_name_error">이름은 최대 10자를 넘길 수 없습니다.</string>
 </resources>
