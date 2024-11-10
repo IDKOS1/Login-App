@@ -15,6 +15,7 @@ import com.example.loginapp.R
 import com.example.loginapp.data.UserRepository
 import com.example.loginapp.databinding.FragmentSignupBinding
 import com.example.loginapp.model.User
+import com.example.loginapp.ui.login.LoginFragment
 import com.example.loginapp.util.toastMessage
 
 class SignupFragment : Fragment() {
@@ -120,6 +121,7 @@ class SignupFragment : Fragment() {
                     }
 
                     else -> {
+                        // UserRepository에 사용자 정보 추가
                         UserRepository.addUser(
                             User(
                                 etUserName.text.toString(),
@@ -128,9 +130,22 @@ class SignupFragment : Fragment() {
                                 etNickname.text.toString()
                             )
                         )
+
+                        // LoginFragment로 화면 전환 및 백스택 제거
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, LoginFragment())
+                            .addToBackStack(null)
+                            .commit()
                         toastMessage(requireContext(), "회원가입 성공")
                     }
                 }
+            }
+
+            tvNavigateToLogin.setOnClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, LoginFragment())
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }
@@ -261,12 +276,11 @@ class SignupFragment : Fragment() {
                             isPasswordMatch = false
                         } else if (s.toString() != binding.etPassword.text.toString()) {
                             // 비밀번호와 일치하지 않으면 에러 메시지 표시
-                            tvPasswordCheckError.visibility = View.VISIBLE
-                            tvPasswordCheckError.text = "비밀번호가 일치하지 않습니다."
+                            setErrorMessage(tvPasswordCheckError, true, "비밀번호가 일치하지 않습니다.")
                             isPasswordMatch = false
                         } else {
                             // 비밀번호와 일치하면 에러 메시지 숨김
-                            tvPasswordCheckError.visibility = View.GONE
+                            setErrorMessage(tvPasswordCheckError, false, "비밀번호가 일치합니다..")
                             isPasswordMatch = true
                         }
                     }
@@ -293,7 +307,7 @@ class SignupFragment : Fragment() {
                     ) {
                         // 닉네임 필드가 비어져 있을때 에러 메세지 숨김
                         if (s.isNullOrEmpty()) {
-                            tvNicknameError.visibility = View.GONE
+                            tvNicknameError.visibility = View.INVISIBLE
                         } else if (s.length > 10) {
                             // 닉네임이 10자 이상일 때 입력 제한 및 에러 메세지 표시
                             etNickname.setText(s.substring(0, 10))
@@ -302,7 +316,7 @@ class SignupFragment : Fragment() {
                             isNicknameChecked = false
                         } else {
                             // 해당 조건이 없을때 에러 메세지 숨김
-                            tvNicknameError.visibility = View.GONE
+                            tvNicknameError.visibility = View.INVISIBLE
                             isNicknameChecked = false
                         }
                     }
