@@ -15,14 +15,8 @@ object UserRepository {
         users.add(user)
     }
 
-    // 특정 유저 삭제
-    fun removeUser(user: User) {
-        users.remove(user)
-    }
-
-    // 모든 유저 데이터 삭제 (초기화)
-    fun clearUsers() {
-        users.clear()
+    fun returnUser(email: String, password: String): User? {
+        return users.find { it.email == email && it.password == password }
     }
 
     // 이메일 중복성 검사
@@ -33,5 +27,10 @@ object UserRepository {
     // 닉네임 중복성 검사
     fun isNicknameDuplicate(nickname: String): Boolean {
         return users.any { it.nickname == nickname }
+    }
+
+    // 로그인 가능 검사
+    fun isLoginPossible(email: String, password: String): Boolean {
+        return users.any { it.email == email && it.password == password }
     }
 }
