@@ -7,20 +7,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.loginapp.R
-import com.example.loginapp.data.UserRepository
+import androidx.fragment.app.viewModels
 import com.example.loginapp.databinding.FragmentSignupBinding
 import com.example.loginapp.model.User
+import com.example.loginapp.ui.MainActivity
 import com.example.loginapp.ui.login.LoginFragment
+import com.example.loginapp.util.setErrorMessage
+import com.example.loginapp.util.setFocusAndScroll
 import com.example.loginapp.util.toastMessage
+import com.example.loginapp.viewmodel.SignupViewModel
 
 class SignupFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
+    private val signupViewModel: SignupViewModel by viewModels()
 
     private var isEmailValid = false
     private var isPasswordValid = false
@@ -59,8 +61,9 @@ class SignupFragment : Fragment() {
         setInputValidation()
         setCheckDuplicate()
 
+        // EditText 포커스시 스크롤 이동
         binding.run {
-            setFocusSetting(etUserName, etEmail, etPassword, etPasswordCheck, etNickname)
+            setFocusAndScroll(svSignup, etUserName, etEmail, etPassword, etPasswordCheck, etNickname)
         }
 
         setSignup()
@@ -122,49 +125,23 @@ class SignupFragment : Fragment() {
 
                     else -> {
                         // UserRepository에 사용자 정보 추가
-                        UserRepository.addUser(
-                            User(
-                                etUserName.text.toString(),
-                                etEmail.text.toString(),
-                                etPassword.text.toString(),
-                                etNickname.text.toString()
-                            )
+                        val user = User(
+                            binding.etUserName.text.toString(),
+                            binding.etEmail.text.toString(),
+                            binding.etPassword.text.toString(),
+                            binding.etNickname.text.toString()
                         )
+                        signupViewModel.addUser(user)
 
                         // LoginFragment로 화면 전환 및 백스택 제거
-                        parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, LoginFragment())
-                            .addToBackStack(null)
-                            .commit()
+                        (activity as? MainActivity)?.switchFragment(LoginFragment())
                         toastMessage(requireContext(), "회원가입 성공")
                     }
                 }
             }
 
             tvNavigateToLogin.setOnClickListener {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, LoginFragment())
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-    }
-
-    private fun setFocusSetting(vararg args: EditText) {
-        for (editText in args) {
-            editText.setOnFocusChangeListener { _, hasFocus ->
-                scrollView(hasFocus)
-            }
-        }
-    }
-
-    private fun scrollView(hasFocus: Boolean) {
-        if (hasFocus) {
-            // 포커스가 생겼을 때 약간의 추가 여유 공간을 주어 스크롤을 조금 더 위로 올림
-            binding.run {
-                svSignup.post {
-                    svSignup.scrollBy(0, 50) // 필요에 따라 조정 (예: 200px)
-                }
+                (activity as? MainActivity)?.switchFragment(LoginFragment())
             }
         }
     }
@@ -186,7 +163,7 @@ class SignupFragment : Fragment() {
                     if (s.isNullOrEmpty()) {
                         tvEmailError.visibility = View.GONE
                     } else if (!s.matches(emailPattern.toRegex())) {
-                        setErrorMessage(tvEmailError, true, "이메일 형식이 올바르지 않습니다.")
+                        tvEmailError.setErrorMessage(true, "이메일 형식이 올바르지 않습니다.")
                         isEmailValid = false
                         isEmailChecked = false
                     } else {
@@ -219,15 +196,14 @@ class SignupFragment : Fragment() {
                         isPasswordValid = false
                     } else if (!s.matches(passwordPattern.toRegex())) {
                         // 비밀번호 조건이 만족되지 않을 경우 에러 메시지 표시
-                        setErrorMessage(
-                            tvPasswordError,
+                        tvPasswordError.setErrorMessage(
                             true,
                             "영문, 숫자, 특수문자 조합으로 8~15자이여야 합니다."
                         )
                         isPasswordValid = false
                     } else {
                         // 비밀번호가 유효할 때 에러 메시지 숨김
-                        setErrorMessage(tvPasswordError, false, "올바른 형식의 비밀번호입니다.")
+                        tvPasswordError.setErrorMessage(false, "올바른 형식의 비밀번호입니다.")
                         isPasswordValid = true
                     }
 
@@ -243,10 +219,10 @@ class SignupFragment : Fragment() {
                         isPasswordMatch = false
                     } else if (passwordCheckText != binding.etPassword.text.toString()) {
                         // 비밀번호 확인이 입력되어 있는 경우에만 일치 여부 검사
-                        setErrorMessage(tvPasswordCheckError, true, "비밀번호가 일치하지 않습니다.")
+                        tvPasswordCheckError.setErrorMessage(true, "비밀번호가 일치하지 않습니다.")
                         isPasswordMatch = false
                     } else {
-                        setErrorMessage(tvPasswordCheckError, false, "비밀번호가 일치합니다.")
+                        tvPasswordCheckError.setErrorMessage(false, "비밀번호가 일치합니다.")
                         isPasswordMatch = true
                     }
 
@@ -276,11 +252,11 @@ class SignupFragment : Fragment() {
                             isPasswordMatch = false
                         } else if (s.toString() != binding.etPassword.text.toString()) {
                             // 비밀번호와 일치하지 않으면 에러 메시지 표시
-                            setErrorMessage(tvPasswordCheckError, true, "비밀번호가 일치하지 않습니다.")
+                            tvPasswordCheckError.setErrorMessage(true, "비밀번호가 일치하지 않습니다.")
                             isPasswordMatch = false
                         } else {
                             // 비밀번호와 일치하면 에러 메시지 숨김
-                            setErrorMessage(tvPasswordCheckError, false, "비밀번호가 일치합니다..")
+                            tvPasswordCheckError.setErrorMessage(false, "비밀번호가 일치합니다..")
                             isPasswordMatch = true
                         }
                     }
@@ -312,7 +288,7 @@ class SignupFragment : Fragment() {
                             // 닉네임이 10자 이상일 때 입력 제한 및 에러 메세지 표시
                             etNickname.setText(s.substring(0, 10))
                             etNickname.setSelection(10)
-                            setErrorMessage(etNickname, true, "닉네임은 10자 이하로 입력해주세요.")
+                            tvNicknameError.setErrorMessage(true, "닉네임은 10자 이하로 입력해주세요.")
                             isNicknameChecked = false
                         } else {
                             // 해당 조건이 없을때 에러 메세지 숨김
@@ -348,19 +324,19 @@ class SignupFragment : Fragment() {
         binding.run {
             when {
                 email.isEmpty() -> {
-                    setErrorMessage(tvEmailError, true, "이메일을 입력해주세요.")
+                    tvEmailError.setErrorMessage(true, "이메일을 입력해주세요.")
                 }
 
                 !email.matches(emailPattern.toRegex()) -> {
-                    setErrorMessage(tvEmailError, true, "이메일 형식이 올바르지 않습니다.")
+                    tvEmailError.setErrorMessage(true, "이메일 형식이 올바르지 않습니다.")
                 }
 
-                UserRepository.isEmailDuplicate(email) -> {
-                    setErrorMessage(tvEmailError, true, "이미 사용 중인 이메일입니다.")
+                signupViewModel.checkEmailDuplicate(email) -> {
+                    tvEmailError.setErrorMessage(true, "이미 사용 중인 이메일입니다.")
                 }
 
                 else -> {
-                    setErrorMessage(tvEmailError, false, "사용 가능한 이메일입니다.")
+                    tvEmailError.setErrorMessage(false, "사용 가능한 이메일입니다.")
                 }
             }
         }
@@ -370,33 +346,18 @@ class SignupFragment : Fragment() {
         binding.run {
             when {
                 nickname.isEmpty() -> {
-                    setErrorMessage(tvNicknameError, true, "닉네임을 입력해주세요.")
+                    tvNicknameError.setErrorMessage(true, "닉네임을 입력해주세요.")
                 }
 
-                UserRepository.isNicknameDuplicate(nickname) -> {
-                    setErrorMessage(tvNicknameError, true, "이미 사용 중인 닉네임입니다.")
+                signupViewModel.isNicknameDuplicate(nickname) -> {
+                    tvNicknameError.setErrorMessage(true, "이미 사용 중인 닉네임입니다.")
                 }
 
                 else -> {
-                    setErrorMessage(tvNicknameError, false, "사용 가능한 닉네임입니다.")
+                    tvNicknameError.setErrorMessage(false, "사용 가능한 닉네임입니다.")
                 }
             }
         }
     }
 
-    /**
-     * 에러 메세지 설정 함수
-     * @param view 에러 메세지가 표시될 뷰
-     * @param isError 에러 여부
-     * @param message 에러 메세지
-     **/
-    private fun setErrorMessage(view: TextView, isError: Boolean, message: String) {
-        if (isError) {
-            view.setTextColor(resources.getColor(R.color.error))
-        } else {
-            view.setTextColor(resources.getColor(R.color.blue))
-        }
-        view.text = message
-        view.visibility = View.VISIBLE
-    }
 }
